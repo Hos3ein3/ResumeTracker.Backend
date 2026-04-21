@@ -9,7 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\ResumeTracker.Infrastructure\ResumeTracker.Infrastructure.csproj" />
     <ProjectReference Include="..\ResumeTracker.Persistence\ResumeTracker.Persistence.csproj" />
-    <ProjectReference Include="..\ResumeTracker.Core\ResumeTracker.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Serilog" />
