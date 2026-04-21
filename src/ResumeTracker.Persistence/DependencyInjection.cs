@@ -57,6 +57,7 @@ public static class DependencyInjection
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
                 options.Password.RequireNonAlphanumeric = false;
+
                 options.Password.RequiredLength = 6;
             })
             .AddEntityFrameworkStores<ResumeTrackerDbContext>()

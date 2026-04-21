@@ -41,6 +41,13 @@ public static class IdentityDataSeeder
                 Name = "System",
                 NormalizedName = "SYSTEM",
                 Priority = 3
+            },
+            new ApplicationRole
+            {
+                Id = SeedConstants.Roles.UserId,
+                Name = "User",
+                NormalizedName = "USER",
+                Priority = 4
             }
         };
 

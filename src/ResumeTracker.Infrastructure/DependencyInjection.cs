@@ -7,8 +7,9 @@ using ResumeTracker.Application.Abstractions.Cache;
 using ResumeTracker.Application.Abstractions.FileStorage;
 using ResumeTracker.Application.Abstractions.Localization;
 using ResumeTracker.Application.Abstractions.Persistence;
-using ResumeTracker.Application.Features.Auth.Register;
+using ResumeTracker.Application.Features.Auth;
 using ResumeTracker.Application.Features.UserPreferences;
+using ResumeTracker.Infrastructure.Auth;
 using ResumeTracker.Infrastructure.Cache;
 using ResumeTracker.Infrastructure.Configurations;
 using ResumeTracker.Infrastructure.FileStorage;
@@ -21,6 +22,7 @@ using ResumeTracker.Infrastructure.Repositories;
 using ResumeTracker.Infrastructure.Services.Auth;
 using ResumeTracker.Infrastructure.Services.UserPreferences;
 using ResumeTracker.Infrastructure.Settings;
+using ResumeTracker.Persistence.Repositories;
 
 namespace ResumeTracker.Infrastructure;
 
@@ -30,6 +32,8 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.Configure<JwtSettings>(configuration.GetSection(JwtSettings.SectionName));
+
         var mongoSettings = configuration
             .GetSection("MongoDb")
             .Get<MongoDbSettings>()
@@ -105,8 +109,11 @@ public static class DependencyInjection
     };
 });
 
+        services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IUserPreferencesService, UserPreferencesService>();
+
 
         return services;
     }

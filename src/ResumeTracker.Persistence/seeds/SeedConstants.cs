@@ -7,6 +7,7 @@ public static class SeedConstants
         public static readonly Guid AdminId = Guid.Parse("11111111-0000-0000-0000-000000000001");
         public static readonly Guid DeveloperId = Guid.Parse("11111111-0000-0000-0000-000000000002");
         public static readonly Guid SystemId = Guid.Parse("11111111-0000-0000-0000-000000000003");
+        public static readonly Guid UserId = Guid.Parse("11111111-0000-0000-0000-000000000004");
     }
 
     public static class Users

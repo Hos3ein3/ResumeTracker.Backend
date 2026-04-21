@@ -1,6 +1,8 @@
 using FluentValidation;
 
-namespace ResumeTracker.Application.Features.Auth.Register;
+using ResumeTracker.Application.DTOs.Auth;
+
+namespace ResumeTracker.Application.Validators;
 
 public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {

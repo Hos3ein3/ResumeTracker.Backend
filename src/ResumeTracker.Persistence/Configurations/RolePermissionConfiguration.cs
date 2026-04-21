@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
 using ResumeTracker.Persistence.Entities;
 
 namespace ResumeTracker.Persistence.Configurations;
@@ -8,7 +9,7 @@ public sealed class RolePermissionConfiguration : IEntityTypeConfiguration<RoleP
 {
     public void Configure(EntityTypeBuilder<RolePermission> builder)
     {
-        builder.ToTable("RolePermissions");
+        builder.ToTable("RolePermissions", DatabaseSchemas.Identity);
         builder.HasKey(x => new { x.RoleId, x.PermissionId });
 
         builder.HasOne(x => x.Role)

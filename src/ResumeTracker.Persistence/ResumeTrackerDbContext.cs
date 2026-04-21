@@ -7,6 +7,7 @@ using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.Persistence;
 using ResumeTracker.Domain;
 using ResumeTracker.Domain.Entities;
+using ResumeTracker.Persistence.Configurations;
 using ResumeTracker.Persistence.Conventions;
 using ResumeTracker.Persistence.Entities;
 using ResumeTracker.Persistence.Identity;
@@ -31,9 +32,13 @@ public class ResumeTrackerDbContext : IdentityDbContext<ApplicationUser, Applica
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.HasDefaultSchema(DatabaseSchemas.App);
         base.OnModelCreating(builder);
+        builder.buildIdentityConfiguration();
 
         builder.ApplyConfigurationsFromAssembly(typeof(ResumeTrackerDbContext).Assembly);
+
+
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)

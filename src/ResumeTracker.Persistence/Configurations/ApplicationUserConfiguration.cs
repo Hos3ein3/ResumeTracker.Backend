@@ -11,7 +11,8 @@ public sealed class ApplicationUserConfiguration : IEntityTypeConfiguration<Appl
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)
     {
-        
+
+        builder.ToTable("Users", DatabaseSchemas.Identity);
 
         builder.Property(x => x.FirstName)
             .HasMaxLength(100)

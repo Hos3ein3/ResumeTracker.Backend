@@ -3,6 +3,7 @@ using System.Security.Claims;
 using k8s.KubeConfigModels;
 
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 
 using ResumeTracker.Application.Features.UserPreferences;
 using ResumeTracker.Domain.Exceptions;
@@ -14,7 +15,7 @@ public class GetUserPreferences
 {
     public static async Task<IResult> Handle(
        string userId,
-       IUserPreferencesService service,
+     [FromServices] IUserPreferencesService service,
         UserManager<ApplicationUser> userManager,
        CancellationToken cancellationToken)
     {

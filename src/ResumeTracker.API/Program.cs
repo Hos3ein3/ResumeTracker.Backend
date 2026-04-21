@@ -6,10 +6,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
 using ResumeTracker.API.Extensions;
+using ResumeTracker.API.OpenApi;
 using ResumeTracker.Infrastructure;
 using ResumeTracker.Infrastructure.Configurations;
 using ResumeTracker.Infrastructure.Middlewares;
 using ResumeTracker.Infrastructure.Middlewares.HttpLogging;
+using ResumeTracker.Infrastructure.Settings;
 using ResumeTracker.Persistence;
 using ResumeTracker.Persistence.Identity;
 using ResumeTracker.Persistence.Seeds;
@@ -41,7 +43,11 @@ try
             loggerConfig));
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddOpenApi();
+    builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+});
+
     builder.Services.AddApiVersioningSetup();
     builder.Services.AddVersionedRouters(typeof(Program).Assembly);
 
@@ -61,6 +67,10 @@ try
     // ──────────────────────────────────────────────
     // JWT Authentication
     // ──────────────────────────────────────────────
+    var jwtSettings = builder.Configuration
+     .GetSection(JwtSettings.SectionName)
+     .Get<JwtSettings>()!;
+
     builder.Services
         .AddAuthentication(options =>
         {
@@ -69,21 +79,51 @@ try
         })
         .AddJwtBearer(options =>
         {
-            var secretKey = builder.Configuration["Jwt:SecretKey"]
-                ?? throw new InvalidOperationException("Jwt:SecretKey is missing.");
-
             options.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidIssuer = jwtSettings.Issuer,
                 ValidateAudience = true,
-                ValidAudience = builder.Configuration["Jwt:Audience"],
+                ValidAudience = jwtSettings.Audience,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                IssuerSigningKey = new SymmetricSecurityKey(
+                                               Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero   // ← no grace period; exact expiry
+            };
+
+            // Return proper 401 JSON instead of redirect
+            options.Events = new JwtBearerEvents
+            {
+                OnChallenge = async ctx =>
+                {
+                    ctx.HandleResponse();
+                    ctx.Response.StatusCode = 401;
+                    ctx.Response.ContentType = "application/problem+json";
+                    await ctx.Response.WriteAsJsonAsync(new
+                    {
+                        status = 401,
+                        title = "Unauthorized",
+                        detail = "Access token is missing or invalid.",
+                        instance = ctx.Request.Path.ToString()
+                    });
+                },
+                OnForbidden = async ctx =>
+                {
+                    ctx.Response.StatusCode = 403;
+                    ctx.Response.ContentType = "application/problem+json";
+                    await ctx.Response.WriteAsJsonAsync(new
+                    {
+                        status = 403,
+                        title = "Forbidden",
+                        detail = "You do not have permission to access this resource.",
+                        instance = ctx.Request.Path.ToString()
+                    });
+                }
             };
         });
+
+
 
     builder.Services.AddAuthorization();
 
@@ -109,7 +149,10 @@ try
      {
          options.Title = "ResumeTracker API";
          options.Theme = ScalarTheme.Purple;
-         options.WithPreferredScheme("Bearer");
+         options.Authentication = new ScalarAuthenticationOptions
+         {
+             PreferredSecuritySchemes = ["Bearer"]
+         };
      });
 
         // ── Routes ─────────────────────────────────────────────
