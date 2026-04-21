@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ResumeTracker.API/ResumeTracker.API.csproj" />
+    <Project Path="src/ResumeTracker.Application/ResumeTracker.Application.csproj" />
+    <Project Path="src/ResumeTracker.Domain/ResumeTracker.Domain.csproj" />
+    <Project Path="src/ResumeTracker.Infrastructure/ResumeTracker.Infrastructure.csproj" />
+    <Project Path="src/ResumeTracker.Persistence/ResumeTracker.Persistence.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ResumeTracker.UnitTests/ResumeTracker.UnitTests.csproj" />
+  </Folder>
+</Solution>

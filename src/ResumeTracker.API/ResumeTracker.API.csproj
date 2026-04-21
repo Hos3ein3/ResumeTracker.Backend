@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="Scalar.AspNetCore" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ResumeTracker.Infrastructure\ResumeTracker.Infrastructure.csproj" />
+    <ProjectReference Include="..\ResumeTracker.Persistence\ResumeTracker.Persistence.csproj" />
+    <ProjectReference Include="..\ResumeTracker.Core\ResumeTracker.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Serilog" />
+    <ProjectReference Include="Serilog.AspNetCore" />
+    <ProjectReference Include="Serilog.Enrichers.Environment" />
+    <ProjectReference Include="Serilog.Enrichers.Thread" />
+    <ProjectReference Include="Serilog.Extensions.Logging" />
+    <ProjectReference Include="Serilog.Formatting.Compact" />
+    <ProjectReference Include="Serilog.Sinks.Console" />
+    <ProjectReference Include="Serilog.Sinks.File" />
+    <ProjectReference Include="Serilog.Sinks.Seq" />
+  </ItemGroup>
+</Project>

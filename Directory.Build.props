@@ -1,0 +1,27 @@
+<Project>
+  <PropertyGroup>
+	  <!-- <Company>ModuliX</Company>
+  <Authors>Mohammad Hosein Behzadifard</Authors>
+  <Product>ModuliX Platform</Product>
+
+  
+  
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors> 
+    
+    <Deterministic>true</Deterministic>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <DebugType>portable</DebugType>-->  
+  
+  <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable> 
+</PropertyGroup> 
+  <!-- <ItemGroup Condition="'$(MSBuildProjectExtension)' != '.dcproj'">
+    <PackageReference Include="SonarAnalyzer.CSharp">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup> -->
+
+</Project>

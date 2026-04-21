@@ -1,0 +1,111 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: modulix-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: modulix
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d modulix"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: modulix-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com   # use a valid-looking email
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"                                # open http://localhost:5050
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin            # <-- declare below
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    container_name: modulix-mssql
+    restart: unless-stopped
+    environment:
+      ACCEPT_EULA: "1"
+      MSSQL_SA_PASSWORD: "YourStrong!Passw0rd"   # change me
+      MSSQL_USER: "sa"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P $MSSQL_SA_PASSWORD -Q 'SELECT 1' || exit 1"]
+      interval: 10s
+      timeout: 3s
+      retries: 20
+      start_period: 20s
+    # if you really want full SQL Server in emulation, swap image to mcr.microsoft.com/mssql/server:2022-latest and add:
+    # platform: linux/amd64
+
+  # ---------- Redis ----------
+  redis:
+    image: redis:7-alpine
+    container_name: modulix-redis
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # ---------- MongoDB ----------
+  mongo:
+    image: mongo:7
+    container_name: modulix-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --username root --password root --eval 'db.adminCommand({ping:1})' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+
+  # Mongo web UI (optional)
+  mongo-express:
+    image: mongo-express:1.0.2-20
+    container_name: modulix-mongo-express
+    restart: unless-stopped
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: root
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_BASICAUTH_USERNAME: admin
+      ME_CONFIG_BASICAUTH_PASSWORD: admin
+    ports:
+      - "8081:8081"
+    depends_on:
+      mongo:
+        condition: service_healthy
+volumes:
+  pgdata:
+  pgadmin_data:
+  mssql_data:
+  redis_data:
+  mongo_data:
