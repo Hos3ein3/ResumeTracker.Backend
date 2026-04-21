@@ -56,8 +56,8 @@ jobs:
           docker pull ghcr.io/${{ env.IMAGE_NAME }}:latest
 
       - name: Deploy
-        working-directory: ~/wwwroot/resume-tracker/backend
         run: |
+          cd ~/wwwroot/resume-tracker/backend
           docker compose --env-file .env up -d --no-deps --pull always resumetracker-api
 
       - name: Clean up old images
