@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
 
-COPY Directory.Build.props .          # ← ADD THIS LINE HERE
+COPY Directory.Build.props .
 
 # Copy each .csproj individually
 COPY src/ResumeTracker.API/ResumeTracker.API.csproj                         src/ResumeTracker.API/
