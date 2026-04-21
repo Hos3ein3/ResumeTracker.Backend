@@ -12,14 +12,14 @@
     <ProjectReference Include="..\ResumeTracker.Core\ResumeTracker.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Serilog" />
-    <ProjectReference Include="Serilog.AspNetCore" />
-    <ProjectReference Include="Serilog.Enrichers.Environment" />
-    <ProjectReference Include="Serilog.Enrichers.Thread" />
-    <ProjectReference Include="Serilog.Extensions.Logging" />
-    <ProjectReference Include="Serilog.Formatting.Compact" />
-    <ProjectReference Include="Serilog.Sinks.Console" />
-    <ProjectReference Include="Serilog.Sinks.File" />
-    <ProjectReference Include="Serilog.Sinks.Seq" />
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Serilog.Enrichers.Environment" />
+    <PackageReference Include="Serilog.Enrichers.Thread" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Formatting.Compact" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.File" />
+    <PackageReference Include="Serilog.Sinks.Seq" />
   </ItemGroup>
 </Project>
