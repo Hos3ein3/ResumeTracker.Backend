@@ -1,33 +1,28 @@
 services:
-
-  # ── API ──────────────────────────────────────────────
   resumetracker-api:
     image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/resumetracker-api:${IMAGE_TAG:-latest}
     container_name: resumetracker-api
     restart: unless-stopped
+    ports:
+      - "8090:8080"
     environment:
       ASPNETCORE_ENVIRONMENT: Production
-      ConnectionStrings__MongoDB: ${MONGO_CONNECTION}
-      ConnectionStrings__PostgreSQL: ${POSTGRES_CONNECTION}
-      ConnectionStrings__Redis: ${REDIS_CONNECTION}
-      Jwt__Secret: ${JWT_SECRET}
+      ConnectionStrings__DefaultConnection: ${POSTGRES_CONNECTION}
+      MongoDb__ConnectionString: ${MONGO_CONNECTION}
+      MongoDb__DatabaseName: ${MONGO_DATABASE}
+      MongoDb__FilesCollection: resume_files
+      Redis__ConnectionString: ${REDIS_CONNECTION}
+      Redis__InstanceName: ${REDIS_INSTANCE}
+      Jwt__SecretKey: ${JWT_SECRET}
       Jwt__Issuer: ${JWT_ISSUER}
       Jwt__Audience: ${JWT_AUDIENCE}
-      Jwt__ExpiryMinutes: ${JWT_EXPIRY_MINUTES:-60}
+      Jwt__AccessTokenExpiryMinutes: ${JWT_EXPIRY_MINUTES}
+      Serilog__WriteTo__0__Args__serverUrl: http://seq-logging
+    volumes:
+      - ~/wwwroot/resume-tracker/backend/files:/app/wwwroot/files
     networks:
-      - resumetracker-net
-    depends_on:
-      - nginx
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
-
-  # ── Nginx ─────────────────────────────────────────────
+      - homelab-docker-network
 
 networks:
-  resumetracker-net:
-    name: resumetracker-net
-    driver: bridge
+  homelab-docker-network:
+    external: true
