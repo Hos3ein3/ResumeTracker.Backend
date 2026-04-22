@@ -15,25 +15,21 @@ public sealed class DomainEventDispatcher : IDomainEventDispatcher
         _serviceProvider = serviceProvider;
     }
 
-    public async Task DispatchAsync(
-        IEnumerable<IDomainEvent> domainEvents,
-        CancellationToken cancellationToken = default)
+    public async Task DispatchAsync(IDomainEvent domainEvent, CancellationToken ct = default)
+    {
+        var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
+        var handlers = _serviceProvider.GetServices(handlerType);
+
+        foreach (var handler in handlers)
+        {
+            // call HandleAsync via reflection — keeps it strongly typed at registration
+            var method = handlerType.GetMethod(nameof(IDomainEventHandler<IDomainEvent>.HandleAsync))!;
+            await (Task)method.Invoke(handler, [domainEvent, ct])!;
+        }
+    }
+    public async Task DispatchAllAsync(IEnumerable<IDomainEvent> domainEvents, CancellationToken ct = default)
     {
         foreach (var domainEvent in domainEvents)
-        {
-            var handlerType = typeof(IDomainEventHandler<>).MakeGenericType(domainEvent.GetType());
-            var handlers = _serviceProvider.GetServices(handlerType);
-
-            foreach (var handler in handlers)
-            {
-                var method = handlerType.GetMethod(nameof(IDomainEventHandler<IDomainEvent>.HandleAsync));
-                if (method is null)
-                    continue;
-
-                var task = (Task?)method.Invoke(handler, [domainEvent, cancellationToken]);
-                if (task is not null)
-                    await task;
-            }
-        }
+            await DispatchAsync(domainEvent, ct);
     }
 }

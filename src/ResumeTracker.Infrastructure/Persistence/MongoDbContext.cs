@@ -40,6 +40,10 @@ public sealed class MongoDbContext
     public IMongoCollection<UserPreferences> UserPreferences =>
         _database.GetCollection<UserPreferences>("user_preferences");
 
+
+    public IMongoCollection<ResumeLog> ResumeLogs =>
+        _database.GetCollection<ResumeLog>("resume_logs");
+
     private IMongoCollection<T> _collection<T>(string name) =>
             _database.GetCollection<T>(name);
     private void EnsureIndexes()
@@ -55,5 +59,10 @@ public sealed class MongoDbContext
         UserPreferences.Indexes.CreateOne(new CreateIndexModel<UserPreferences>(
         Builders<UserPreferences>.IndexKeys.Ascending(x => x.UserId),
         new CreateIndexOptions { Unique = true }));
+
+        ResumeLogs.Indexes.CreateOne(new CreateIndexModel<ResumeLog>(Builders<ResumeLog>.IndexKeys.Ascending(x => x.ResumeId),
+        new CreateIndexOptions { Unique = true }));
+
+
     }
 }

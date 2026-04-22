@@ -45,8 +45,14 @@ public class GenericRepository<TEntity, TId> : IGenericRepository<TEntity, TId>
         Context.Entry(entity).State = EntityState.Modified;
     }
 
+
     public void Remove(TEntity entity)
     {
         DbSet.Remove(entity);
     }
+
+    public async Task<TEntity?> GetByIdWithNoTrackingAsync(TId id, CancellationToken cancellationToken = default)
+    => await Context.Set<TEntity>()
+        .AsNoTracking()
+        .FirstOrDefaultAsync(e => e.Id!.Equals(id), cancellationToken);
 }

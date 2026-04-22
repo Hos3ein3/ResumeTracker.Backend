@@ -12,7 +12,7 @@ public static class GetOrCreate
 {
     public static async Task<IResult> Handle(
            ClaimsPrincipal user,
-UpdateUserPreferencesRequest request,
+CreateUserPreferencesRequest request,
          [FromServices] IUserPreferencesService service,
            CancellationToken cancellationToken)
     {

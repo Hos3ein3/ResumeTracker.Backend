@@ -3,7 +3,7 @@ namespace ResumeTracker.Persistence;
 
 public static class DatabaseSchemas
 {
-    public const string Identity = "identity";
-    public const string App = "app";
-    public const string Blog = "blog";
+    public const string Identity = "Identity";
+    public const string App = "App";
+    public const string CMS = "CMS";
 }

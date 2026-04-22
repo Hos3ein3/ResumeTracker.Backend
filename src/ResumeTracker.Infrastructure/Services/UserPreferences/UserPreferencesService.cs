@@ -23,8 +23,13 @@ public sealed class UserPreferencesService : IUserPreferencesService
         _localizer = localizer;
         _logger = logger;
     }
+    public CreateUserPreferencesRequest CreateObject(string? preferredLanguage,
+        string? timeZone)
+    => new CreateUserPreferencesRequest(Language: preferredLanguage, TimeZone: timeZone);
 
-    public async Task<OperationResult> CreateAsync(Guid userId, UpdateUserPreferencesRequest request, CancellationToken cancellationToken = default)
+
+
+    public async Task<OperationResult> CreateAsync(Guid userId, CreateUserPreferencesRequest request, CancellationToken cancellationToken = default)
     {
         var preferences = await _repository.GetByUserIdAsync(userId, cancellationToken);
 
@@ -38,7 +43,7 @@ public sealed class UserPreferencesService : IUserPreferencesService
 
         preferences = new();
 
-
+        preferences.UserId = userId;
         if (request.Language is not null) preferences.Language = request.Language;
         if (request.Theme is not null) preferences.Theme = request.Theme;
         if (request.TimeZone is not null) preferences.TimeZone = request.TimeZone;
@@ -55,7 +60,7 @@ public sealed class UserPreferencesService : IUserPreferencesService
         if (request.Language is not null)
             preferences.UseRtlLayout = request.Language == "fa";
 
-        await _repository.CreateAsync(preferences, cancellationToken);
+        await _repository.InsertAsync(preferences, cancellationToken);
 
         return OperationResult<UserPreferencesResponse>.Success();
     }
@@ -85,8 +90,7 @@ public sealed class UserPreferencesService : IUserPreferencesService
             ResumeViewAlerts: preferences.ResumeViewAlerts,
             DefaultPageSize: preferences.DefaultPageSize,
             DefaultSortBy: preferences.DefaultSortBy,
-            DefaultSortOrder: preferences.DefaultSortOrder,
-            UpdatedAtUtc: preferences.UpdatedAtUtc);
+            DefaultSortOrder: preferences.DefaultSortOrder);
 
         return OperationResult<UserPreferencesResponse>.Success(response);
     }

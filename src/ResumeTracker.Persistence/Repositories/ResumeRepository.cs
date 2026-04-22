@@ -1,15 +1,19 @@
 using Microsoft.EntityFrameworkCore;
 
-using ResumeTracker.Application.Abstractions.Persistence;
+using ResumeTracker.Application.Common.Extensions;
+using ResumeTracker.Application.Common.Models;
 using ResumeTracker.Application.Repositories;
+using ResumeTracker.Domain.Common;
 using ResumeTracker.Domain.Entities;
 
 namespace ResumeTracker.Persistence.Repositories;
 
 public sealed class ResumeRepository : GenericRepository<Resume, Guid>, IResumeRepository
 {
+    private readonly ResumeTrackerDbContext _context;
     public ResumeRepository(ResumeTrackerDbContext context) : base(context)
     {
+        _context = context;
     }
 
     public async Task<IReadOnlyList<Resume>> GetByUserIdAsync(
@@ -31,4 +35,13 @@ public sealed class ResumeRepository : GenericRepository<Resume, Guid>, IResumeR
             .AsNoTracking()
             .AnyAsync(r => r.Id == resumeId, cancellationToken);
     }
+
+    public async Task<PagedList<Resume>> GetAllByUserAsync(
+       Guid userId,
+       PagedQuery query,
+       CancellationToken ct = default)
+       => await _context.Resumes
+           .Where(r => r.UserId == userId)
+           .OrderByDescending(r => r.ApplyDate)
+           .ToPagedListAsync(query, ct);
 }

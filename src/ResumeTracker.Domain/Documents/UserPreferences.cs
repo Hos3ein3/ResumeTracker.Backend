@@ -1,8 +1,9 @@
+using ResumeTracker.Domain.Common;
+
 namespace ResumeTracker.Domain.Documents;
 
-public sealed class UserPreferences
+public sealed class UserPreferences : MongoAggregateRoot
 {
-    public string Id { get; set; } = default!;   // MongoDB ObjectId
     public Guid UserId { get; set; }               // FK to Identity user
 
     // ── UI / Localization ──────────────────────────────────
@@ -22,7 +23,4 @@ public sealed class UserPreferences
     public string DefaultSortBy { get; set; } = "CreatedAtUtc";
     public string DefaultSortOrder { get; set; } = "desc";
 
-    // ── Metadata ───────────────────────────────────────────
-    public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
-    public DateTime UpdatedAtUtc { get; set; } = DateTime.UtcNow;
 }

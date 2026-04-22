@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Identity;
 
+using ResumeTracker.Domain.Common;
 using ResumeTracker.Persistence.Entities;
 
 namespace ResumeTracker.Persistence.Identity;

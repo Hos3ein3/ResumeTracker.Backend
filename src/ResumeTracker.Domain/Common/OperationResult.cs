@@ -20,7 +20,8 @@ public sealed class OperationResult<T> : OperationResult
             Data = data,
             Title = title,
             Message = message,
-            StatusCode = statusCode
+            StatusCode = statusCode,
+            Status = OperationResultStatus.Success
         };
 
     public static OperationResult<T> Created(
@@ -33,6 +34,7 @@ public sealed class OperationResult<T> : OperationResult
             Data = data,
             Title = title,
             Message = message,
+            Status = OperationResultStatus.Success,
             StatusCode = HttpStatusCode.Created
         };
 
@@ -47,7 +49,24 @@ public sealed class OperationResult<T> : OperationResult
             Title = title,
             Message = message,
             StatusCode = statusCode,
+            Status = OperationResultStatus.Error,
             Errors = errors?.ToList() ?? []
+        };
+
+    public static OperationResult<T> Info(
+            T? data,
+            string message,
+            string title = "Information",
+         HttpStatusCode statusCode = HttpStatusCode.Continue)
+        => new()
+        {
+            IsSuccess = true,
+            Data = data,
+            Title = title,
+            Message = message,
+            StatusCode = statusCode,
+            Status = OperationResultStatus.Info
+
         };
 
     public new static OperationResult<T> NotFound(
@@ -83,7 +102,7 @@ public class OperationResult
     public string Message { get; protected init; } = default!;
     public HttpStatusCode StatusCode { get; protected init; }
     public IReadOnlyList<string> Errors { get; protected init; } = [];
-
+    public OperationResultStatus Status { get; set; }
     protected OperationResult() { }
 
     public static OperationResult Success(
@@ -95,7 +114,8 @@ public class OperationResult
             IsSuccess = true,
             Title = title,
             Message = message,
-            StatusCode = statusCode
+            StatusCode = statusCode,
+            Status = OperationResultStatus.Success
         };
 
     public static OperationResult Failure(
@@ -109,8 +129,22 @@ public class OperationResult
             Title = title,
             Message = message,
             StatusCode = statusCode,
+            Status = OperationResultStatus.Error,
             Errors = errors?.ToList() ?? []
         };
+
+    public static OperationResult Info(
+            string message,
+            string title = "Information",
+            HttpStatusCode statusCode = HttpStatusCode.Continue)
+            => new()
+            {
+                IsSuccess = true,
+                Title = title,
+                Message = message,
+                StatusCode = statusCode,
+                Status = OperationResultStatus.Info
+            };
 
     public static OperationResult NotFound(
         string message,
@@ -135,4 +169,11 @@ public class OperationResult
 
     /// <summary>Converts to IResult for minimal API endpoints.</summary>
 
+}
+
+public enum OperationResultStatus
+{
+    Success,
+    Error,
+    Info
 }

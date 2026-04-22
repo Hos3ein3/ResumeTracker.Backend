@@ -16,8 +16,11 @@ public interface IUserPreferencesService
         UpdateUserPreferencesRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<OperationResult> CreateAsync(
+    Task<OperationResult>  CreateAsync(
         Guid userId,
-UpdateUserPreferencesRequest request,
+CreateUserPreferencesRequest request,
         CancellationToken cancellationToken = default);
+
+    CreateUserPreferencesRequest CreateObject(string? preferredLanguage,
+    string? timeZone);
 }

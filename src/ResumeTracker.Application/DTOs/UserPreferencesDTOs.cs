@@ -15,6 +15,19 @@ public sealed record UpdateUserPreferencesRequest(
     string? DefaultSortBy,
     string? DefaultSortOrder
 );
+public sealed record CreateUserPreferencesRequest(
+    string? Language,
+    string? Theme = null,
+    string? TimeZone = null,
+    string? DateFormat = "DD/MM/YYYY",
+    bool? UseRtlLayout = null,
+    bool? EmailNotifications = null,
+    bool? PushNotifications = null,
+    bool? ResumeViewAlerts = null,
+    int? DefaultPageSize = 10,
+    string? DefaultSortBy = "Id",
+    string? DefaultSortOrder = "asc"
+);
 public sealed record UserPreferencesResponse(
     Guid UserId,
     string Language,
@@ -27,6 +40,5 @@ public sealed record UserPreferencesResponse(
     bool ResumeViewAlerts,
     int DefaultPageSize,
     string DefaultSortBy,
-    string DefaultSortOrder,
-    DateTime UpdatedAtUtc
+    string DefaultSortOrder
 );

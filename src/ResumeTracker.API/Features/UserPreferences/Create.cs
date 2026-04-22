@@ -12,7 +12,7 @@ namespace ResumeTracker.API.Features.UserPreferences;
 public static class Create
 {
     public static async Task<IResult> Handle(
-        UpdateUserPreferencesRequest request,
+        CreateUserPreferencesRequest request,
 ClaimsPrincipal user,
     [FromServices] IUserPreferencesService service,
     CancellationToken cancellationToken)

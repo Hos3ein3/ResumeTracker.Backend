@@ -5,11 +5,11 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using ResumeTracker.Application.Abstractions.Auth;
+using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.Persistence;
 using ResumeTracker.Application.DTOs.Auth;
 using ResumeTracker.Application.Features.Auth;
 using ResumeTracker.Domain.Common;
-using ResumeTracker.Infrastructure.Auth;
 using ResumeTracker.Infrastructure.Settings;
 using ResumeTracker.Persistence.Identity;
 
@@ -49,13 +49,10 @@ public sealed class AuthService : IAuthService
             return OperationResult<AuthResponse>.Conflict(
                 $"An account with email '{request.Email}' already exists.");
 
-        var user = new ApplicationUser     // ← Persistence type, fine in Infrastructure
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email,
-            UserName = request.Email
-        };
+        var user = ApplicationUser.Create(request.Email, request.FirstName,
+            request.LastName, request.PreferredLanguage, request.TimeZone
+        );
+        user.UserName = request.Email;
 
         var result = await _userManager.CreateAsync(user, request.Password);
         if (!result.Succeeded)
@@ -65,6 +62,8 @@ public sealed class AuthService : IAuthService
 
         await _userManager.AddToRoleAsync(user, "User");
         _logger.LogInformation("User {UserId} registered from {IP}", user.Id, ipAddress);
+
+        //await _domainEventDispatcher.DispatchAllAsync(user.DomainEvents, ct);
 
         return await IssueTokenPairAsync(user, ipAddress, ct);
     }

@@ -4,11 +4,20 @@ using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Driver;
 
 using ResumeTracker.Application.Abstractions.Cache;
+using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.FileStorage;
 using ResumeTracker.Application.Abstractions.Localization;
 using ResumeTracker.Application.Abstractions.Persistence;
+using ResumeTracker.Application.EventsHandler.ResumeLog;
+using ResumeTracker.Application.EventsHandler.User;
 using ResumeTracker.Application.Features.Auth;
+using ResumeTracker.Application.Features.ResumeLog;
+using ResumeTracker.Application.Features.Resumes;
 using ResumeTracker.Application.Features.UserPreferences;
+using ResumeTracker.Application.Repositories;
+using ResumeTracker.Application.Services.Resumes;
+using ResumeTracker.Domain.Events.Resume;
+using ResumeTracker.Domain.Events.Users;
 using ResumeTracker.Infrastructure.Auth;
 using ResumeTracker.Infrastructure.Cache;
 using ResumeTracker.Infrastructure.Configurations;
@@ -20,8 +29,10 @@ using ResumeTracker.Infrastructure.Middlewares.HttpLogging;
 using ResumeTracker.Infrastructure.Persistence;
 using ResumeTracker.Infrastructure.Repositories;
 using ResumeTracker.Infrastructure.Services.Auth;
+using ResumeTracker.Infrastructure.Services.ResumeLog;
 using ResumeTracker.Infrastructure.Services.UserPreferences;
 using ResumeTracker.Infrastructure.Settings;
+using ResumeTracker.Persistence.Dispatchers;
 using ResumeTracker.Persistence.Repositories;
 
 namespace ResumeTracker.Infrastructure;
@@ -51,7 +62,6 @@ public static class DependencyInjection
             ?? throw new InvalidOperationException("FileStorage settings are missing.");
 
         services.AddSingleton(fileStorageSettings);
-        services.AddScoped<IFileStorageService, MongoFileStorageService>();
 
         // ── 1. IMongoClient FIRST — everything else depends on it ──
         services.AddSingleton<IMongoClient>(_ =>
@@ -113,7 +123,15 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         services.AddScoped<IUserPreferencesService, UserPreferencesService>();
+        services.AddScoped<IResumeRepository, ResumeRepository>();
 
+
+        services.AddScoped<IResumeLogRepository, ResumeLogRepository>();
+        services.AddScoped<IResumeLogService, ResumeLogService>();
+        services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+
+        services.AddScoped<IDomainEventHandler<UserRegisteredEvent>, CreateUserProfileOnRegistered>();
+        services.AddScoped<IDomainEventHandler<ResumeStatusChangedEvent>, LogResumeStatusChangeEventHandler>();
 
         return services;
     }

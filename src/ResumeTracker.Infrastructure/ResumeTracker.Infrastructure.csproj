@@ -1,10 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
   <ItemGroup>
-<EmbeddedResource Include="Resources\*\*.resx" />
+    <EmbeddedResource Include="Resources\*\*.resx" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ResumeTracker.Application\ResumeTracker.Application.csproj" />

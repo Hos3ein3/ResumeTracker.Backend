@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.Persistence;
 using ResumeTracker.Domain;
+using ResumeTracker.Domain.Common;
 using ResumeTracker.Domain.Entities;
 using ResumeTracker.Persistence.Configurations;
 using ResumeTracker.Persistence.Conventions;
@@ -44,26 +45,25 @@ public class ResumeTrackerDbContext : IdentityDbContext<ApplicationUser, Applica
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var domainEvents = ChangeTracker
-            .Entries<AggregateRoot<Guid>>()
+            .Entries<IHasDomainEvents>()
             .Select(x => x.Entity)
             .Where(x => x.DomainEvents.Any())
             .SelectMany(x => x.DomainEvents)
             .ToList();
 
-        foreach (var entity in ChangeTracker.Entries<AggregateRoot<Guid>>()
-                     .Select(x => x.Entity)
-                     .Where(x => x.DomainEvents.Any()))
-        {
-            entity.ClearDomainEvents();
-        }
-
         var result = await base.SaveChangesAsync(cancellationToken);
+
 
         if (domainEvents.Count != 0)
         {
-            await _domainEventDispatcher.DispatchAsync(domainEvents, cancellationToken);
+            await _domainEventDispatcher.DispatchAllAsync(domainEvents, cancellationToken);
         }
-
+        foreach (var entity in ChangeTracker.Entries<AggregateRoot<Guid>>()
+                             .Select(x => x.Entity)
+                             .Where(x => x.DomainEvents.Any()))
+        {
+            entity.ClearDomainEvents();
+        }
         return result;
     }
 

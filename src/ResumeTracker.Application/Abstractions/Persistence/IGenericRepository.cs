@@ -10,6 +10,7 @@ namespace ResumeTracker.Application.Abstractions.Persistence;
 public interface IGenericRepository<TEntity, TId>
  where TEntity : AggregateRoot<TId>
 {
+    Task<TEntity?> GetByIdWithNoTrackingAsync(TId id, CancellationToken cancellationToken = default);
     Task<TEntity?> GetByIdAsync(TId id, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<TEntity>> GetAllAsync(CancellationToken cancellationToken = default);
     Task AddAsync(TEntity entity, CancellationToken cancellationToken = default);
