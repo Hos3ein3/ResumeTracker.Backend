@@ -138,27 +138,19 @@ try
     app.UseLocalizationSetup();
     app.UseHttpRequestResponseLogging();
 
-    // ──────────────────────────────────────────────
-    // Scalar UI — only in Development
-    // ──────────────────────────────────────────────
-    if (app.Environment.IsDevelopment())
-    {
-        app.MapOpenApi();  // exposes /openapi/v1.json
 
-        app.MapScalarApiReference(options =>
+    app.MapOpenApi();  // exposes /openapi/v1.json
+
+    app.MapScalarApiReference(options =>
+ {
+     options.Title = "ResumeTracker API";
+     options.Theme = ScalarTheme.Purple;
+     options.Authentication = new ScalarAuthenticationOptions
      {
-         options.Title = "ResumeTracker API";
-         options.Theme = ScalarTheme.Purple;
-         options.Authentication = new ScalarAuthenticationOptions
-         {
-             PreferredSecuritySchemes = ["Bearer"]
-         };
-     });
+         PreferredSecuritySchemes = ["Bearer"]
+     };
+ });
 
-        // ── Routes ─────────────────────────────────────────────
-
-        // Scalar UI available at: /scalar/v1
-    }
     app.MapVersionedRouters();
     app.UseHealthCheckEndpoints();
     // Redirect root to Health Check UI
