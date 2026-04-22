@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ResumeTracker.Persistence;
@@ -11,9 +12,11 @@ using ResumeTracker.Persistence;
 namespace ResumeTracker.Persistence.Migrations
 {
     [DbContext(typeof(ResumeTrackerDbContext))]
-    partial class ResumeTrackerDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260422161502_addedNewProperties")]
+    partial class addedNewProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
