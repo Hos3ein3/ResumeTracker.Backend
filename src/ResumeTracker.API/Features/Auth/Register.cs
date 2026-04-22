@@ -12,7 +12,7 @@ public static class Register
     public static async Task<IResult> Handle(
         RegisterRequest request,
         [FromServices] IAuthService authService,
-[FromServices] IUserPreferencesService userPreferencesService,
+        [FromServices] IUserPreferencesService userPreferencesService,
         HttpContext httpContext,
         CancellationToken ct)
     {

@@ -19,6 +19,9 @@ public class Router : IVersionedEndpointRouter
              .WithTags("Auth")
              .AllowAnonymous();
 
+        auth.MapGet("Get-all", GetAllUsers.Handle).WithName("Get All Users")
+            .WithSummary("Get All Users");
+
         var prefs = group.MapGroup("user-pref").WithTags("User Preferences");
 
         auth.MapPost("register", Register.Handle)

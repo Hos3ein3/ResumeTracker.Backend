@@ -1,6 +1,6 @@
 services:
   resumetracker-api:
-    image: ghcr.io/${GITHUB_REPOSITORY_OWNER}/resumetracker-api:${IMAGE_TAG:-latest}
+    image: ghcr.io/hos3ein3/resumetracker-api:latest
     container_name: resumetracker-api
     restart: unless-stopped
     ports:

@@ -132,6 +132,10 @@ try
     // Build
     // ──────────────────────────────────────────────
     var app = builder.Build();
+    Log.Information("App running in {0} env", app.Environment.EnvironmentName);
+    Log.Information("Connection: {Conn}",
+        app.Configuration.GetConnectionString("DefaultConnection"));
+
     app.UseExceptionHandler();
     app.UseStructuredRequestLogging();
     app.UseCorrelationContext();
