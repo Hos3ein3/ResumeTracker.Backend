@@ -2,6 +2,14 @@
 
 namespace ResumeTracker.Application.DTOs.Auth;
 
+
+
+public record RegisterResponse(
+Guid UserId,
+string Email,
+string FullName
+);
+
 public record RegisterRequest(
     string FirstName,
     string LastName,
@@ -10,12 +18,6 @@ public record RegisterRequest(
     string ConfirmPassword,
     string? PreferredLanguage,
     string? TimeZone);
-
-public record RegisterResponse(
-Guid UserId,
-string Email,
-string FullName
-);
 
 public sealed record LoginRequest(string Email, string Password);
 

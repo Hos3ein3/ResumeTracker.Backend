@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 
 using ResumeTracker.API.Extensions;
@@ -128,6 +129,9 @@ try
     builder.Services.AddAuthorization();
 
     builder.Services.AddRouters();
+    builder.Services.AddFeatureManagement();
+    builder.Services.ScanCQRSScurtor();
+
     // ──────────────────────────────────────────────
     // Build
     // ──────────────────────────────────────────────

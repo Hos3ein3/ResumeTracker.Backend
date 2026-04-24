@@ -1,12 +1,10 @@
 using FluentValidation;
 
-using ResumeTracker.Application.DTOs.Auth;
+namespace ResumeTracker.Application.Features.Auth.Register;
 
-namespace ResumeTracker.Application.Validators;
-
-public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
+public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
 {
-    public RegisterRequestValidator()
+    public RegisterCommandValidator()
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.")
@@ -26,8 +24,5 @@ public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest
             .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
             .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
 
-        RuleFor(x => x.PreferredLanguage)
-            .Must(lang => lang is null || new[] { "en", "fa", "it" }.Contains(lang))
-            .WithMessage("Supported languages are: en, fa, it.");
     }
 }

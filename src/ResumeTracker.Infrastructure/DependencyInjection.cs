@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using MongoDB.Driver;
 
+using ResumeTracker.Application.Abstractions;
 using ResumeTracker.Application.Abstractions.Cache;
 using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.FileStorage;
@@ -22,6 +23,7 @@ using ResumeTracker.Infrastructure.Auth;
 using ResumeTracker.Infrastructure.Cache;
 using ResumeTracker.Infrastructure.Configurations;
 using ResumeTracker.Infrastructure.FileStorage;
+using ResumeTracker.Infrastructure.Identity;
 using ResumeTracker.Infrastructure.Localization;
 using ResumeTracker.Infrastructure.Middlewares;
 using ResumeTracker.Infrastructure.Middlewares.ExceptionHandling;
@@ -119,6 +121,7 @@ public static class DependencyInjection
     };
 });
 
+        services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<ITokenService, TokenService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();

@@ -4,7 +4,6 @@ using ResumeTracker.API.Extensions;
 using ResumeTracker.API.Features.Auth;
 using ResumeTracker.API.Features.UserPreferences;
 using ResumeTracker.Application.DTOs.Auth;
-using ResumeTracker.Application.Features.UserPreferences;
 
 namespace ResumeTracker.API;
 
@@ -24,10 +23,7 @@ public class Router : IVersionedEndpointRouter
 
         var prefs = group.MapGroup("user-pref").WithTags("User Preferences");
 
-        auth.MapPost("register", Register.Handle)
-            .WithName("Auth.Register")
-            .WithSummary("Register a new account")
-            .WithValidator<RegisterRequest>();
+
 
         auth.MapPost("login", Login.Handle)
             .WithName("Auth.Login")

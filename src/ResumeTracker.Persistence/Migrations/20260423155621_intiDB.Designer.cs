@@ -12,15 +12,15 @@ using ResumeTracker.Persistence;
 namespace ResumeTracker.Persistence.Migrations
 {
     [DbContext(typeof(ResumeTrackerDbContext))]
-    [Migration("20260421142818_changeScheme")]
-    partial class changeScheme
+    [Migration("20260423155621_intiDB")]
+    partial class intiDB
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasDefaultSchema("app")
+                .HasDefaultSchema("App")
                 .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -47,7 +47,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("RoleClaims", "identity");
+                    b.ToTable("RoleClaims", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<System.Guid>", b =>
@@ -71,7 +71,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserClaims", "identity");
+                    b.ToTable("UserClaims", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
@@ -92,7 +92,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserLogins", "identity");
+                    b.ToTable("UserLogins", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
@@ -107,7 +107,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("UserRoles", "identity");
+                    b.ToTable("UserRoles", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
@@ -126,7 +126,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("UserTokens", "identity");
+                    b.ToTable("UserTokens", "Identity");
                 });
 
             modelBuilder.Entity("ResumeTracker.Domain.Entities.Resume", b =>
@@ -142,6 +142,10 @@ namespace ResumeTracker.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
+
+                    b.Property<string>("CoverLetterText")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
 
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -159,17 +163,16 @@ namespace ResumeTracker.Persistence.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("JobDescription")
-                        .IsRequired()
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
 
                     b.Property<string>("LinkUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(500)
+                        .HasColumnType("character varying(500)");
 
                     b.Property<string>("Location")
-                        .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)");
 
                     b.Property<DateTime?>("ModifiedAtUtc")
                         .HasColumnType("timestamp with time zone");
@@ -178,20 +181,22 @@ namespace ResumeTracker.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Note")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
                     b.Property<string>("Position")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
 
-                    b.Property<long>("ResumeSource")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ResumeSource")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
-                    b.Property<long>("ResumeStatus")
-                        .HasColumnType("bigint");
+                    b.Property<string>("ResumeStatus")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("character varying(50)");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -203,7 +208,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Resumes", "app");
+                    b.ToTable("Resumes", "App");
                 });
 
             modelBuilder.Entity("ResumeTracker.Persistence.Entities.Permission", b =>
@@ -236,7 +241,7 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasIndex("Resource", "Action")
                         .IsUnique();
 
-                    b.ToTable("Permissions", "identity");
+                    b.ToTable("Permissions", "Identity");
                 });
 
             modelBuilder.Entity("ResumeTracker.Persistence.Entities.RefreshToken", b =>
@@ -300,7 +305,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", "identity");
+                    b.ToTable("RefreshTokens", "Identity");
                 });
 
             modelBuilder.Entity("ResumeTracker.Persistence.Entities.RolePermission", b =>
@@ -315,7 +320,7 @@ namespace ResumeTracker.Persistence.Migrations
 
                     b.HasIndex("PermissionId");
 
-                    b.ToTable("RolePermissions", "identity");
+                    b.ToTable("RolePermissions", "Identity");
                 });
 
             modelBuilder.Entity("ResumeTracker.Persistence.Identity.ApplicationRole", b =>
@@ -345,7 +350,7 @@ namespace ResumeTracker.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("Roles", "identity");
+                    b.ToTable("Roles", "Identity");
                 });
 
             modelBuilder.Entity("ResumeTracker.Persistence.Identity.ApplicationUser", b =>
@@ -423,7 +428,7 @@ namespace ResumeTracker.Persistence.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("Users", "identity");
+                    b.ToTable("Users", "Identity");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

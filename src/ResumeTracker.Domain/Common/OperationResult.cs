@@ -1,5 +1,7 @@
 using System.Net;
 
+using ResumeTracker.Domain.Exceptions;
+
 namespace ResumeTracker.Domain.Common;
 
 
@@ -53,6 +55,23 @@ public sealed class OperationResult<T> : OperationResult
             Errors = errors?.ToList() ?? []
         };
 
+
+    public new static OperationResult<T> Failure(
+Error error,
+    string message = "",
+    string title = "Error",
+    HttpStatusCode statusCode = HttpStatusCode.BadRequest
+     )
+    => new()
+    {
+        IsSuccess = false,
+        Title = title,
+        Message = message,
+        StatusCode = statusCode,
+        Status = OperationResultStatus.Error,
+        Error = error
+    };
+
     public static OperationResult<T> Info(
             T? data,
             string message,
@@ -69,6 +88,24 @@ public sealed class OperationResult<T> : OperationResult
 
         };
 
+    public static OperationResult<T> Info(
+               T? data,
+                Error error,
+               string message = "",
+               string title = "Information",
+            HttpStatusCode statusCode = HttpStatusCode.Continue)
+           => new()
+           {
+               IsSuccess = true,
+               Data = data,
+               Title = title,
+               Message = message,
+               StatusCode = statusCode,
+               Status = OperationResultStatus.Info,
+               Error = error
+
+           };
+
     public new static OperationResult<T> NotFound(
         string message,
         string title = "Not Found")
@@ -78,6 +115,17 @@ public sealed class OperationResult<T> : OperationResult
         string message,
         string title = "Conflict")
         => Failure(message, title, HttpStatusCode.Conflict);
+    public static OperationResult<T> NotFound(
+Error error,
+    string message = "",
+    string title = "Not Found")
+    => Failure(error, message, title, HttpStatusCode.NotFound);
+
+    public static OperationResult<T> Conflict(
+        Error error,
+        string message = "",
+        string title = "Conflict")
+        => Failure(error, message, title, HttpStatusCode.Conflict);
 
     public new static OperationResult<T> ValidationFailure(
         string message,
@@ -96,12 +144,18 @@ public sealed class OperationResult<T> : OperationResult
 /// </summary>
 public class OperationResult
 {
+    protected OperationResult(bool isSuccess, Error error)
+    {
+        IsSuccess = false;
+        Error = error;
+    }
     public bool IsSuccess { get; protected init; }
     public bool IsFailure => !IsSuccess;
     public string Title { get; protected init; } = default!;
     public string Message { get; protected init; } = default!;
     public HttpStatusCode StatusCode { get; protected init; }
     public IReadOnlyList<string> Errors { get; protected init; } = [];
+    public Error Error { get; protected init; } = default!;
     public OperationResultStatus Status { get; set; }
     protected OperationResult() { }
 
@@ -132,6 +186,21 @@ public class OperationResult
             Status = OperationResultStatus.Error,
             Errors = errors?.ToList() ?? []
         };
+    public static OperationResult Failure(
+Error error,
+    string message = "",
+    string title = "Error",
+    HttpStatusCode statusCode = HttpStatusCode.BadRequest
+    )
+    => new()
+    {
+        IsSuccess = false,
+        Title = title,
+        Message = message,
+        StatusCode = statusCode,
+        Status = OperationResultStatus.Error,
+        Error = error
+    };
 
     public static OperationResult Info(
             string message,
@@ -146,20 +215,35 @@ public class OperationResult
                 Status = OperationResultStatus.Info
             };
 
+    public static OperationResult Info(
+Error error,
+    string message = "",
+    string title = "Information",
+    HttpStatusCode statusCode = HttpStatusCode.Continue)
+    => new()
+    {
+        IsSuccess = true,
+        Title = title,
+        Message = message,
+        StatusCode = statusCode,
+        Status = OperationResultStatus.Info,
+        Error = error
+    };
+
     public static OperationResult NotFound(
         string message,
         string title = "Not Found")
-        => Failure(message, title, HttpStatusCode.NotFound);
+        => Failure(Error.NotFound, message, title, HttpStatusCode.NotFound);
 
     public static OperationResult Unauthorized(
         string message = "You are not authorized to perform this action.",
         string title = "Unauthorized")
-        => Failure(message, title, HttpStatusCode.Unauthorized);
+        => Failure(Error.Unauthorized, message, title, HttpStatusCode.Unauthorized);
 
     public static OperationResult Conflict(
         string message,
         string title = "Conflict")
-        => Failure(message, title, HttpStatusCode.Conflict);
+        => Failure(Error.Conflict, message, title, HttpStatusCode.Conflict);
 
     public static OperationResult ValidationFailure(
         string message,

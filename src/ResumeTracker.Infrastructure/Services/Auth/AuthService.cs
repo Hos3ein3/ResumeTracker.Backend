@@ -63,7 +63,7 @@ public sealed class AuthService : IAuthService
         await _userManager.AddToRoleAsync(user, "User");
         _logger.LogInformation("User {UserId} registered from {IP}", user.Id, ipAddress);
 
-        //await _domainEventDispatcher.DispatchAllAsync(user.DomainEvents, ct);
+
 
         return await IssueTokenPairAsync(user, ipAddress, ct);
     }
