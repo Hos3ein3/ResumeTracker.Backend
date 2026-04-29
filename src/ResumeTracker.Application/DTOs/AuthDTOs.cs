@@ -28,6 +28,8 @@ public record LogoutRequest(string RefreshToken);
 
 public sealed record AuthResponse(
     Guid UserId,
+    string Username,
+    string PhoneNumber,
     string Email,
     string FullName,
     IReadOnlyList<string> Roles,

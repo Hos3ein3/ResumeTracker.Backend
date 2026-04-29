@@ -92,7 +92,8 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
         {
             problem.Extensions["exceptionType"] = exception.GetType().FullName;
             problem.Extensions["stackTrace"] = exception.StackTrace;
-            problem.Extensions["innerException"] = exception.InnerException?.Message;
+            problem.Extensions["innerException"] = GetInnermostMessage(exception);
+
         }
 
         return problem;
@@ -168,4 +169,10 @@ public sealed class GlobalExceptionHandler : IExceptionHandler
     private static bool IsCritical(Exception e)
         => e.Message.Contains("connection", StringComparison.OrdinalIgnoreCase)
            || e.Message.Contains("database", StringComparison.OrdinalIgnoreCase);
+    private static string? GetInnermostMessage(Exception? ex)
+    {
+        while (ex?.InnerException != null)
+            ex = ex.InnerException;
+        return ex?.Message;
+    }
 }

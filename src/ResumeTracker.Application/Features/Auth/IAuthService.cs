@@ -2,6 +2,7 @@
 
 using ResumeTracker.Application.DTOs.Auth;
 using ResumeTracker.Domain.Common;
+using ResumeTracker.Domain.Entities.Users;
 
 namespace ResumeTracker.Application.Features.Auth;
 
@@ -22,5 +23,10 @@ public interface IAuthService
 
     Task<OperationResult> LogoutAsync(
         LogoutRequest request, string ipAddress, CancellationToken ct = default);
+
+    Task<OperationResult<AuthResponse>> IssueTokenPairAsync(
+        User user,
+        CancellationToken ct,
+        string? preGeneratedRefreshToken = null);
 
 }

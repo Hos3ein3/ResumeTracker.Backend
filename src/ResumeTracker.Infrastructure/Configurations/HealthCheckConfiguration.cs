@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using HealthChecks.Uris;
 
 namespace ResumeTracker.Infrastructure.Configurations;
 
@@ -19,9 +20,8 @@ public static class HealthCheckConfiguration
     {
         var pgConnection = configuration.GetConnectionString("DefaultConnection")!;
         var redisConnection = configuration["Redis:ConnectionString"]!;
-
-        // ❌ DO NOT register IMongoClient here anymore — already registered in DependencyInjection.cs
-
+        var seqUrl = configuration["Serilog:WriteTo:0:Args:serverUrl"]!; // 
+        
         services
             .AddHealthChecks()
             .AddCheck(
@@ -38,10 +38,15 @@ public static class HealthCheckConfiguration
                 name: "redis",
                 failureStatus: HealthStatus.Degraded,
                 tags: ["ready", "cache", "redis"])
-            .AddMongoDb(   // ✅ resolves IMongoClient from DI — already registered above
+            .AddMongoDb(   
                 name: "mongodb",
                 failureStatus: HealthStatus.Degraded,
-                tags: ["ready", "files", "mongodb"]);
+                tags: ["ready", "files", "mongodb"])
+            .AddUrlGroup(
+                uri: new Uri($"{seqUrl}/health"),
+                name: "seq",
+                failureStatus: HealthStatus.Degraded,
+                tags: ["ready", "logging", "seq"]);
 
         services
             .AddHealthChecksUI(options =>

@@ -10,6 +10,8 @@ using ResumeTracker.Application.Abstractions.Persistence;
 using ResumeTracker.Application.DTOs.Auth;
 using ResumeTracker.Application.Features.Auth;
 using ResumeTracker.Domain.Common;
+using ResumeTracker.Domain.Entities.Users;
+using ResumeTracker.Infrastructure.Identity;
 using ResumeTracker.Infrastructure.Settings;
 using ResumeTracker.Persistence.Identity;
 
@@ -157,6 +159,46 @@ public sealed class AuthService : IAuthService
         return OperationResult.Success("Logged out successfully.");
     }
 
+    public async Task<OperationResult<AuthResponse>> IssueTokenPairAsync(User user, CancellationToken ct, string? preGeneratedRefreshToken = null)
+    {
+        var roles = await _userManager.GetRolesAsync(user.ToApplicationUser());
+
+        // Map Persistence entity → Application DTO before crossing the boundary
+        var tokenUser = new TokenUserInfo(
+            Id: user.Id,
+            Email: user.Email!,
+            FirstName: user.FirstName,
+            LastName: user.LastName,
+            Roles: roles.ToList());
+
+        var accessToken = _tokenService.GenerateAccessToken(tokenUser);
+        var refreshRaw = preGeneratedRefreshToken ?? _tokenService.GenerateRefreshToken();
+
+        var refreshData = new RefreshTokenData
+        {
+            Id = Guid.NewGuid(),
+            Token = refreshRaw,
+            UserId = user.Id,
+            CreatedAtUtc = DateTime.UtcNow,
+            ExpiresAtUtc = DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenDays)
+        };
+
+        await _refreshTokenRepo.AddAsync(refreshData, ct);
+        await _uow.SaveChangesAsync(ct);
+
+        return OperationResult<AuthResponse>.Success(new AuthResponse(
+            UserId: user.Id,
+            Username:user.UserName,
+            PhoneNumber:user.PhoneNumber,
+            Email: user.Email!,
+            FullName: $"{user.FirstName} {user.LastName}",
+            Roles: roles.ToList(),
+            AccessToken: accessToken,
+            AccessTokenExpiresAtUtc: DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenMinutes),
+            RefreshToken: refreshRaw,
+            RefreshTokenExpiresAtUtc: refreshData.ExpiresAtUtc));
+    }
+
     // ── Private helper ────────────────────────────────────────────
     private async Task<OperationResult<AuthResponse>> IssueTokenPairAsync(
         ApplicationUser user,
@@ -192,6 +234,8 @@ public sealed class AuthService : IAuthService
 
         return OperationResult<AuthResponse>.Success(new AuthResponse(
             UserId: user.Id,
+            Username:user.UserName,
+            PhoneNumber:user.PhoneNumber,
             Email: user.Email!,
             FullName: $"{user.FirstName} {user.LastName}",
             Roles: roles.ToList(),

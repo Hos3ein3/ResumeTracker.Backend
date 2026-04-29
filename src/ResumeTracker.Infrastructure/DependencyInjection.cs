@@ -5,6 +5,7 @@ using MongoDB.Driver;
 
 using ResumeTracker.Application.Abstractions;
 using ResumeTracker.Application.Abstractions.Cache;
+using ResumeTracker.Application.Abstractions.CQRS;
 using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.FileStorage;
 using ResumeTracker.Application.Abstractions.Localization;
@@ -34,6 +35,7 @@ using ResumeTracker.Infrastructure.Services.Auth;
 using ResumeTracker.Infrastructure.Services.ResumeLog;
 using ResumeTracker.Infrastructure.Services.UserPreferences;
 using ResumeTracker.Infrastructure.Settings;
+using ResumeTracker.Persistence.Decorators;
 using ResumeTracker.Persistence.Dispatchers;
 using ResumeTracker.Persistence.Repositories;
 
@@ -133,9 +135,27 @@ public static class DependencyInjection
         services.AddScoped<IResumeLogService, ResumeLogService>();
         services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 
-        services.AddScoped<IDomainEventHandler<UserRegisteredEvent>, CreateUserProfileOnRegistered>();
-        services.AddScoped<IDomainEventHandler<ResumeStatusChangedEvent>, LogResumeStatusChangeEventHandler>();
+        // services.AddScoped<IDomainEventHandler<UserRegisteredEvent>, CreateUserProfileOnRegistered>();
+        // services.AddScoped<IDomainEventHandler<ResumeStatusChangedEvent>, LogResumeStatusChangeEventHandler>();
 
+        services.Scan(scan => scan
+            .FromAssemblies(Application.AssemblyRef.Assembly)
+            .AddClasses(c => c.AssignableTo(typeof(ICommandHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(c => c.AssignableTo(typeof(IQueryHandler<,>)))
+            .AsImplementedInterfaces()
+            .WithScopedLifetime()
+            .AddClasses(c => c.AssignableTo(typeof(IDomainEventHandler<>))) 
+            .AsImplementedInterfaces()
+            .WithScopedLifetime());
+
+        
+        services.Decorate(
+    typeof(ICommandHandler<,>),
+    typeof(TransactionalCommandHandlerDecorator<,>));
+
+        
         return services;
     }
 }

@@ -23,6 +23,7 @@ public class User : AuditableAggregateRoot<Guid>
 
     }
 
+    public string? PhoneNumber { get; set; }
     public string? UserName { get; set; }
     public string? FirstName { get; set; }
     public string? LastName { get; set; }
@@ -30,7 +31,7 @@ public class User : AuditableAggregateRoot<Guid>
 
     public string? SecurityStamp { get; set; }
 
-    public static OperationResult<User> Create(string email, string userName, string firstName, string lastName,
+    public static OperationResult<User> Create(string email, string userName,string phoneNumber, string firstName, string lastName,
     string? preferredLanguage,
     string? timeZone)
     {
@@ -40,7 +41,8 @@ public class User : AuditableAggregateRoot<Guid>
             FirstName = firstName,
             LastName = lastName,
             Email = email,
-            UserName = userName
+            UserName = userName,
+            PhoneNumber = phoneNumber,
 
         };
         user.RaiseDomainEvent(new UserRegisteredEvent(user.Id, email, firstName, lastName, preferredLanguage, timeZone));

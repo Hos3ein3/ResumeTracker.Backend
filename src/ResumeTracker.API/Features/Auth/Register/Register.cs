@@ -17,7 +17,7 @@ public static class Register
         var ip = GetIpAddress(httpContext);
 
 
-        var command = new RegisterCommand(request.FirstName, request.LastName, request.Email, request.Password, request.ConfirmPassword, request.PreferredLanguage, request.TimeZone);
+        var command = new RegisterCommand(request.FirstName, request.LastName, "",request.Email,"", request.Password, request.ConfirmPassword, request.PreferredLanguage, request.TimeZone);
 
         var result = await handler.HandleAsync(command, ct);
 
@@ -39,15 +39,6 @@ public record RegisterRequest(
     string ConfirmPassword,
     string? PreferredLanguage,
     string? TimeZone);
-
-public record RegisterResponse(Guid UserId,
-    string Email,
-    string FullName,
-    IReadOnlyList<string> Roles,
-    string AccessToken,
-    DateTime AccessTokenExpiresAtUtc,
-    string RefreshToken,
-    DateTime RefreshTokenExpiresAtUtc);
 
 public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest>
 {

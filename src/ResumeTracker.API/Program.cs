@@ -130,7 +130,6 @@ try
 
     builder.Services.AddRouters();
     builder.Services.AddFeatureManagement();
-    builder.Services.ScanCQRSScurtor();
 
     // ──────────────────────────────────────────────
     // Build

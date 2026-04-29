@@ -1,4 +1,4 @@
 
-dotnet ef migrations add intiDB --project src/ResumeTracker.Persistence/ResumeTracker.Persistence.csproj  --startup-project src/ResumeTracker.API/ResumeTracker.API.csproj --context ResumeTrackerDbContext
+dotnet ef migrations add refreshtokeipnotmandatory --project src/ResumeTracker.Persistence/ResumeTracker.Persistence.csproj  --startup-project src/ResumeTracker.API/ResumeTracker.API.csproj --context ResumeTrackerDbContext
 
 dotnet ef database update  --project src/ResumeTracker.Persistence/ResumeTracker.Persistence.csproj --startup-project src/ResumeTracker.API/ResumeTracker.API.csproj  --context ResumeTrackerDbContext   

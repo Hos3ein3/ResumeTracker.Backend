@@ -18,6 +18,18 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>MessagesResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Errors\Error.Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Error.Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Errors\Error.Resource.Fa.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Error.Resource.Fa.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Errors\Error.Resource.It.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Error.Resource.It.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Resources\ExceptionResource.Designer.cs">
@@ -29,6 +41,21 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>MessagesResources.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Errors\Error.Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Error.Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Errors\Error.Resource.Fa.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Error.Resource.Fa.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Errors\Error.Resource.It.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Error.Resource.It.resx</DependentUpon>
     </Compile>
   </ItemGroup>
 </Project>

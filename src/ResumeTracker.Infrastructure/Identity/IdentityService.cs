@@ -42,6 +42,14 @@ public class IdentityService : IIdentityService
         return OperationResult<User>.Success(appUser.ToDomainUser());
     }
 
+    public async Task<OperationResult<User>> AnyByEmailAsync(string email)
+    {
+        var appUser = await _userManager.FindByEmailAsync(email);
+        
+        return appUser is null ? OperationResult<User>.Failure(Error.NotFound) :
+         OperationResult<User>.Success(appUser.ToDomainUser());
+    }
+    
     public async Task<OperationResult<User>> AddToRoleAsync(User user, string role)
     {
         var appUser = await _userManager.FindByIdAsync(user.Id.ToString());
@@ -66,6 +74,6 @@ public class IdentityService : IIdentityService
     => OperationResult<IList<string>>.Info(await _userManager.GetRolesAsync(user.ToApplicationUser()), "");
 
     public async Task<OperationResult> CheckPasswordAsync(User user, string password)
-        => await _userManager.CheckPasswordAsync(user.ToApplicationUser(), password) ? OperationResult<bool>.Success()
+        => await _userManager.CheckPasswordAsync(user.ToApplicationUser(), password) ? OperationResult.Success()
             : OperationResult<bool>.Failure(Error.None);
 }

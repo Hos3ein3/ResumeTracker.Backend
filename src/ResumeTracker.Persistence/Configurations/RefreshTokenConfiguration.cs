@@ -22,8 +22,7 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
             .HasMaxLength(256);
 
         builder.Property(x => x.CreatedByIp)
-            .HasMaxLength(50)
-            .IsRequired();
+            .HasMaxLength(50);
 
         builder.Property(x => x.RevokedByIp)
             .HasMaxLength(50);
@@ -39,5 +38,8 @@ public sealed class RefreshTokenConfiguration : IEntityTypeConfiguration<Refresh
             .WithMany(x => x.RefreshTokens)
             .HasForeignKey(x => x.UserId)
             .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Property(x => x.ConcurrencyStamp)
+            .IsConcurrencyToken();
     }
 }

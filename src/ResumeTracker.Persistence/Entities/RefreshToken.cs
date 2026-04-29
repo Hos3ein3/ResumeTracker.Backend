@@ -11,7 +11,7 @@ public sealed class RefreshToken : AuditableAggregateRoot<Guid>
     public DateTime ExpiresAtUtc { get; set; }
     public DateTime? RevokedAtUtc { get; set; }
     public string? ReplacedByToken { get; set; }
-    public string CreatedByIp { get; set; } = default!;
+    public string? CreatedByIp { get; set; } = default!;
     public string? RevokedByIp { get; set; }
 
     public bool IsExpired => DateTime.UtcNow >= ExpiresAtUtc;

@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
+using ResumeTracker.Application.Abstractions.CQRS;
 using ResumeTracker.Application.Abstractions.Events;
 using ResumeTracker.Application.Abstractions.Persistence;
 using ResumeTracker.Application.Features.Resumes;
 using ResumeTracker.Application.Repositories;
 using ResumeTracker.Application.Services.Resumes;
+using ResumeTracker.Persistence.Decorators;
 using ResumeTracker.Persistence.Dispatchers;
 using ResumeTracker.Persistence.Factories;
 using ResumeTracker.Persistence.Identity;
@@ -72,6 +74,8 @@ public static class DependencyInjection
         services.AddScoped(typeof(IGenericRepository<,>), typeof(GenericRepository<,>));
         services.AddScoped<IResumeRepository, ResumeRepository>();
         services.AddScoped<IResumeService, ResumeService>();
+        
+        
 
         return services;
     }

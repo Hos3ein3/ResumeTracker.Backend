@@ -14,6 +14,7 @@ public static class ApplicationUserMapper
             Id = user.Id,
             UserName = user.UserName,
             Email = user.Email,
+            PhoneNumber = user.PhoneNumber,
             FirstName = user.FirstName ?? string.Empty,
             LastName = user.LastName ?? string.Empty,
             CreatedAtUtc = user.CreatedAtUtc,
@@ -26,6 +27,7 @@ public static class ApplicationUserMapper
        {
            UserName = user.Email,
            Email = user.Email ?? "",
+           PhoneNumber = user.PhoneNumber ?? "",
            FirstName = user.FirstName ?? string.Empty,
            LastName = user.LastName ?? string.Empty,
            SecurityStamp = user.SecurityStamp,

@@ -7,9 +7,11 @@ namespace ResumeTracker.Application.Features.Auth.Register;
 public sealed record RegisterCommand
 (string FirstName,
     string LastName,
+    string Username,
     string Email,
+    string PhoneNumber,
     string Password,
     string ConfirmPassword,
     string? preferredLanguage,
-    string? timeZone) : ICommand<OperationResult<AuthResponse>>;
+    string? timeZone) : ICommand<OperationResult<AuthResponse>>,ITransactionalCommand;
 

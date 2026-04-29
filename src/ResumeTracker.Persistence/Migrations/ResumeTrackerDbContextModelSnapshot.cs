@@ -140,6 +140,9 @@ namespace ResumeTracker.Persistence.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("CoverLetterText")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -247,6 +250,10 @@ namespace ResumeTracker.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAtUtc")
                         .HasColumnType("timestamp with time zone");
 
@@ -254,7 +261,6 @@ namespace ResumeTracker.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("CreatedByIp")
-                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("character varying(50)");
 
@@ -433,7 +439,7 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -442,7 +448,7 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -451,7 +457,7 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -460,13 +466,13 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -475,7 +481,7 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
@@ -484,7 +490,7 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationUser", "User")
                         .WithMany("RefreshTokens")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -495,13 +501,13 @@ namespace ResumeTracker.Persistence.Migrations
                     b.HasOne("ResumeTracker.Persistence.Entities.Permission", "Permission")
                         .WithMany("RolePermissions")
                         .HasForeignKey("PermissionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("ResumeTracker.Persistence.Identity.ApplicationRole", "Role")
                         .WithMany("RolePermissions")
                         .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Permission");

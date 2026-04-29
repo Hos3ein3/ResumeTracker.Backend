@@ -36,14 +36,30 @@ public class ResumeTrackerDbContext : IdentityDbContext<ApplicationUser, Applica
         builder.HasDefaultSchema(DatabaseSchemas.App);
         base.OnModelCreating(builder);
         builder.buildIdentityConfiguration();
+        
+        
 
         builder.ApplyConfigurationsFromAssembly(typeof(ResumeTrackerDbContext).Assembly);
-
+        foreach (var relationship in builder.Model
+                     .GetEntityTypes()
+                     .SelectMany(e => e.GetForeignKeys())
+                     .Where(fk => !fk.IsOwnership)) 
+        {
+            if (relationship.DeleteBehavior == DeleteBehavior.Cascade)
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+        }
 
     }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
+        
+        foreach (var entry in ChangeTracker.Entries<IHasConcurrencyStamp>()
+                     .Where(e => e.State is EntityState.Modified or EntityState.Added))
+        {
+            entry.Entity.RotateConcurrencyStamp();
+        }
+        
         var domainEvents = ChangeTracker
             .Entries<IHasDomainEvents>()
             .Select(x => x.Entity)
