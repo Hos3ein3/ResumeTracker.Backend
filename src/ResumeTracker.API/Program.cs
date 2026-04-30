@@ -7,6 +7,7 @@ using Microsoft.FeatureManagement;
 using Microsoft.IdentityModel.Tokens;
 
 using ResumeTracker.API.Extensions;
+using ResumeTracker.API.Features.Auth;
 using ResumeTracker.API.OpenApi;
 using ResumeTracker.Infrastructure;
 using ResumeTracker.Infrastructure.Configurations;
@@ -44,13 +45,16 @@ try
             loggerConfig));
 
     builder.Services.AddEndpointsApiExplorer();
-    builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
-});
-
+    builder.Services.AddOpenApi("v1", options =>
+    {
+        options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    });
+    builder.Services.AddOpenApi("v2", options =>
+    {
+        options.AddDocumentTransformer<BearerSecuritySchemeTransformer>();
+    });
     builder.Services.AddApiVersioningSetup();
-    builder.Services.AddVersionedRouters(typeof(Program).Assembly);
+    //builder.Services.AddVersionedRouters(typeof(Program).Assembly);
 
 
 
@@ -128,7 +132,7 @@ try
 
     builder.Services.AddAuthorization();
 
-    builder.Services.AddRouters();
+    // builder.Services.AddRouters();
     builder.Services.AddFeatureManagement();
 
     // ──────────────────────────────────────────────
@@ -146,19 +150,20 @@ try
     app.UseHttpRequestResponseLogging();
 
 
-    app.MapOpenApi();  // exposes /openapi/v1.json
+    app.MapOpenApi();  
 
     app.MapScalarApiReference(options =>
  {
      options.Title = "ResumeTracker API";
      options.Theme = ScalarTheme.Purple;
+     options.AddDocuments("v1", "v2");
      options.Authentication = new ScalarAuthenticationOptions
      {
          PreferredSecuritySchemes = ["Bearer"]
      };
  });
 
-    app.MapVersionedRouters();
+    app.MapAuthenticationRouter();
     app.UseHealthCheckEndpoints();
     // Redirect root to Health Check UI
     // app.MapGet("/", () => Results.Redirect("/health-ui"))

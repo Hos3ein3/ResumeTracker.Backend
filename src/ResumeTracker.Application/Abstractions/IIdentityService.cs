@@ -10,6 +10,7 @@ namespace ResumeTracker.Application.Abstractions;
 public interface IIdentityService
 {
     Task<OperationResult<User>> FindByEmailAsync(string email);
+    Task<OperationResult<User>> FindByPhonoeAsync(string phone);
     Task<OperationResult<User>> CreateAsync(User user, string password);
     Task<OperationResult<User>> AddToRoleAsync(User user, string role);
     Task<OperationResult<IList<string>>> GetRolesAsync(User user);

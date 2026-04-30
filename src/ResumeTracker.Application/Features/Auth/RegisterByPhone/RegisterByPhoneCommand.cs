@@ -2,16 +2,13 @@ using ResumeTracker.Application.Abstractions.CQRS;
 using ResumeTracker.Application.DTOs.Auth;
 using ResumeTracker.Domain.Common;
 
-namespace ResumeTracker.Application.Features.Auth.Register;
+namespace ResumeTracker.Application.Features.Auth.RegisterByPhone;
 
-public sealed record RegisterCommand
-(string FirstName,
+public sealed record RegisterByPhoneCommand(
+    string FirstName,
     string LastName,
-    string Username,
-    string Email,
     string PhoneNumber,
     string Password,
     string ConfirmPassword,
     string? preferredLanguage,
-    string? timeZone) : ICommand<OperationResult<AuthResponse>>,ITransactionalCommand;
-
+    string? timeZone): ICommand<OperationResult<AuthResponse>>,ITransactionalCommand;

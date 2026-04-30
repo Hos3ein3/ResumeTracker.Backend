@@ -9,10 +9,10 @@ using ResumeTracker.Domain.Exceptions;
 
 namespace ResumeTracker.Application.Features.Auth.Register;
 
-public sealed class RegisterCommandHandler(IIdentityService identityService,ITokenService tokenService, ILogger<RegisterCommandHandler> logger)
-    : ICommandHandler<RegisterCommand, OperationResult<AuthResponse>>
+public sealed class RegisterByEmailCommandHandler(IIdentityService identityService,ITokenService tokenService, ILogger<RegisterByEmailCommandHandler> logger)
+    : ICommandHandler<RegisterByEmailCommand, OperationResult<AuthResponse>>
 {
-    public async Task<OperationResult<AuthResponse>> HandleAsync(RegisterCommand command, CancellationToken ct)
+    public async Task<OperationResult<AuthResponse>> HandleAsync(RegisterByEmailCommand command, CancellationToken ct)
     {
         var existing = await identityService.FindByEmailAsync(command.Email);
         if (existing.Data is not null)

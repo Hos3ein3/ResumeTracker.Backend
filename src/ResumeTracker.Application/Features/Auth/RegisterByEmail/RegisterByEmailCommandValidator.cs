@@ -2,9 +2,9 @@ using FluentValidation;
 
 namespace ResumeTracker.Application.Features.Auth.Register;
 
-public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand>
+public sealed class RegisterByEmailCommandValidator : AbstractValidator<RegisterByEmailCommand>
 {
-    public RegisterCommandValidator()
+    public RegisterByEmailCommandValidator()
     {
         RuleFor(x => x.FirstName)
             .NotEmpty().WithMessage("First name is required.")
@@ -20,9 +20,12 @@ public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")
-            .MinimumLength(6).WithMessage("Password must be at least 6 characters.")
-            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
-            .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
+            .MinimumLength(6).WithMessage("Password must be at least 6 characters.");
+            // .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
+            // .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
+        
+        RuleFor(x => x.ConfirmPassword)
+            .Matches(x=>x.Password).WithMessage("Passwords must match.");
 
     }
 }

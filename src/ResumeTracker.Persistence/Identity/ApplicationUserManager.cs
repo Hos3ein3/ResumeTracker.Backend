@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -23,12 +24,14 @@ public sealed class ApplicationUserManager : UserManager<ApplicationUser>
         IServiceProvider services,
         ILogger<UserManager<ApplicationUser>> logger)
         : base(store, optionsAccessor, passwordHasher,
-               userValidators, passwordValidators,
-               keyNormalizer, errors, services, logger)
+            userValidators, passwordValidators,
+            keyNormalizer, errors, services, logger)
     {
     }
 
-    // Called when creating a user WITHOUT a password (e.g. external login)
+    public async Task<ApplicationUser?> FindByPhoneAsync(string phoneNumber)
+        => await Users.FirstOrDefaultAsync(x => x.PhoneNumber.Equals(phoneNumber));
+
     public override Task<IdentityResult> CreateAsync(ApplicationUser user)
     {
         AssignGuidV7IfEmpty(user);

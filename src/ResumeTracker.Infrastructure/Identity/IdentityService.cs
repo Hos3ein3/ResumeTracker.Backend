@@ -14,11 +14,20 @@ namespace ResumeTracker.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    public IdentityService(UserManager<ApplicationUser> userManager)
+    private readonly ApplicationUserManager _userManager;
+    public IdentityService(ApplicationUserManager userManager)
     {
         _userManager = userManager;
 
+    }
+
+    public async Task<OperationResult<User>> FindByPhonoeAsync(string phone)
+    {
+        var appUser = await _userManager.FindByPhoneAsync(phone);
+
+        if (appUser is null)
+            return OperationResult<User>.Failure(Error.NotFound);
+        return OperationResult<User>.Success(appUser.ToDomainUser());
     }
 
     public async Task<OperationResult<User>> CreateAsync(User user, string password)

@@ -25,7 +25,7 @@ public static class ApplicationUserMapper
     public static User ToDomainUser(this ApplicationUser user)
        => new(user.Id)
        {
-           UserName = user.Email,
+           UserName = user.UserName,
            Email = user.Email ?? "",
            PhoneNumber = user.PhoneNumber ?? "",
            FirstName = user.FirstName ?? string.Empty,

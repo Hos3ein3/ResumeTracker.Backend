@@ -6,18 +6,18 @@ using ResumeTracker.Domain.Common;
 
 namespace ResumeTracker.API.Features.Auth;
 
-public static class Register
+public static class RegisterByEmail 
 {
     public static async Task<IResult> Handle(
     RegisterRequest request,
-    [FromServices] ICommandHandler<RegisterCommand, OperationResult<AuthResponse>> handler,
+    [FromServices] ICommandHandler<RegisterByEmailCommand, OperationResult<AuthResponse>> handler,
     HttpContext httpContext,
     CancellationToken ct)
     {
         var ip = GetIpAddress(httpContext);
 
 
-        var command = new RegisterCommand(request.FirstName, request.LastName, "",request.Email,"", request.Password, request.ConfirmPassword, request.PreferredLanguage, request.TimeZone);
+        var command = new RegisterByEmailCommand(request.FirstName, request.LastName, request.Email, request.Password, request.ConfirmPassword, request.PreferredLanguage, request.TimeZone);
 
         var result = await handler.HandleAsync(command, ct);
 
@@ -58,9 +58,9 @@ public sealed class RegisterRequestValidator : AbstractValidator<RegisterRequest
 
         RuleFor(x => x.Password)
             .NotEmpty().WithMessage("Password is required.")
-            .MinimumLength(6).WithMessage("Password must be at least 6 characters.")
-            .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
-            .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
+            .MinimumLength(6).WithMessage("Password must be at least 6 characters.");
+            // .Matches("[A-Z]").WithMessage("Password must contain at least one uppercase letter.")
+            // .Matches("[0-9]").WithMessage("Password must contain at least one digit.");
 
         RuleFor(x => x.PreferredLanguage)
             .Must(lang => lang is null || new[] { "en", "fa", "it" }.Contains(lang))

@@ -1,10 +1,10 @@
 using ResumeTracker.API.Extensions;
 
-using IRouter = ResumeTracker.API.Extensions.IRouter;
+
 
 namespace ResumeTracker.API.Features.Health;
 
-public sealed class HealthRouter : IRouter
+public sealed class HealthRouter 
 {
     public void RegisterRoutes(IEndpointRouteBuilder app)
     {

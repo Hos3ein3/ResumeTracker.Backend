@@ -56,7 +56,7 @@ public static class DependencyInjection
         services
             .AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-                options.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = false;
                 options.Password.RequireDigit = true;
                 options.Password.RequireLowercase = false;
                 options.Password.RequireUppercase = false;
